@@ -3,17 +3,20 @@
   import Route from 'svelte-navaid/Route.svelte';
 
   import PageNotFound from './_notfound.svelte';
-  import PageHome from './Home.svelte';
-  import PageAnother from './Another.svelte';
+  import HomePage from './Home.svelte';
+  import CatalogPage from './Catalog.svelte';
+  import AboutPage from './About.svelte';
 </script>
 
 <Router>
   <Route path="/">
-    <PageHome/>
+    <HomePage/>
   </Route>
-
-  <Route path="/another">
-    <PageAnother/>
+  <Route path="/catalog">
+    <CatalogPage/>
+  </Route>
+  <Route path="/about">
+    <AboutPage/>
   </Route>
 
   <Route>
