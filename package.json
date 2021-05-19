@@ -1,0 +1,23 @@
+{
+  "name": "my-little-shop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "i:server": "cd server && npm i",
+    "i:client": "cd client && npm i",
+    "i": "concurrently \"npm run i:server\" \"npm run i:client\"",
+    "ci:server": "cd server && npm ci",
+    "ci:client": "cd client && npm ci",
+    "ci": "concurrently \"npm run ci:server\" \"npm run ci:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
+  },
+  "devDependencies": {
+    "concurrently": "^6.1.0"
+  }
+}
