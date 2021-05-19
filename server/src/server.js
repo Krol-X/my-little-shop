@@ -19,7 +19,7 @@ module.exports.init = (config) => {
     console.log('Cannot initialize server: ', err);
     throw err;
   }
-}
+};
 
 module.exports.start = async (app, config) => {
   const port = config.server.port;
@@ -31,4 +31,4 @@ module.exports.start = async (app, config) => {
     console.log(`Cannot up at port ${port} server: ${err}`);
     throw err;
   }
-}
+};
