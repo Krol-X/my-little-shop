@@ -3,9 +3,9 @@
   import Route from 'svelte-navaid/Route.svelte';
 
   import PageNotFound from './_notfound.svelte';
-  import HomePage from './Home.svelte';
-  import CatalogPage from './Catalog.svelte';
-  import AboutPage from './About.svelte';
+  import HomePage from './home.svelte';
+  import CatalogPage from './catalog.svelte';
+  import AboutPage from './about.svelte';
 </script>
 
 <Router>
