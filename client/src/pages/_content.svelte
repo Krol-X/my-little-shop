@@ -1,25 +1,20 @@
 <script>
-  import Router from 'svelte-navaid/Router.svelte';
-  import Route from 'svelte-navaid/Route.svelte';
+  // import Router from 'svelte-navaid/Router.svelte';
+  // import Route from 'svelte-navaid/Route.svelte';
+  import { Router, Route } from "svelte-routing";
 
   import PageNotFound from './_notfound.svelte';
   import HomePage from './home.svelte';
   import CatalogPage from './catalog.svelte';
   import AboutPage from './about.svelte';
+
+  let url = "";
 </script>
 
-<Router>
-  <Route path="/">
-    <HomePage/>
-  </Route>
-  <Route path="/catalog">
-    <CatalogPage/>
-  </Route>
-  <Route path="/about">
-    <AboutPage/>
-  </Route>
+<Router url="{url}">
+  <Route path="/" component={HomePage} />
+  <Route path="/catalog" component={CatalogPage} />
+  <Route path="/about" component={AboutPage} />
 
-  <Route>
-    <PageNotFound/>
-  </Route>
+  <Route component={PageNotFound} />
 </Router>

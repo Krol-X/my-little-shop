@@ -1,25 +1,38 @@
 <script>
+  import {
+    Card,
+    CardHeader, CardTitle,
+    CardBody, CardSubtitle, CardText
+  } from 'sveltestrap';
+
   let goods = [
     {
       name: "Первый товар",
       description: "Описание",
       cost: 20,
-      number: 4
+      count: 4
     },
     {
       name: "Второй товар",
       description: "Описание...",
       cost: 10,
-      number: 2
+      count: 2
     }
   ]
 
 </script>
 
-<div>
-
-</div>
+{#each goods as good, i}
+  <Card class="mx-auto">
+    <CardHeader>
+      <CardTitle>{good.name}</CardTitle>
+    </CardHeader>
+    <CardBody>{good.description}</CardBody>
+  </Card>
+{/each}
 
 <style>
-
+  :global(.card) {
+    width: 50%;
+  }
 </style>

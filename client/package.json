@@ -6,6 +6,7 @@
     "sirv-cli": "1.0.11",
     "svelte": "3.38.2",
     "svelte-navaid": "0.1.1",
+    "svelte-routing": "^1.6.0",
     "sveltestrap": "5.0.2"
   },
   "devDependencies": {
