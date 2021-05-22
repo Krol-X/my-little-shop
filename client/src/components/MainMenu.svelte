@@ -1,4 +1,5 @@
 <script>
+  import { url } from "@roxi/routify";
   import {
     Icon,
     Navbar, NavbarBrand,
@@ -9,13 +10,13 @@
 <Navbar color="light" light expand="md">
   <Nav navbar>
     <NavItem>
-      <NavLink href="/">Home</NavLink>
+      <NavLink href={$url('/')}>Home</NavLink>
     </NavItem>
     <NavItem>
-      <NavLink href="/catalog">Catalog</NavLink>
+      <NavLink href={$url('/catalog')}>Catalog</NavLink>
     </NavItem>
     <NavItem>
-      <NavLink href="/about">About</NavLink>
+      <NavLink href={$url('/about')}>About</NavLink>
     </NavItem>
   </Nav>
   <NavbarBrand class="mx-auto">
@@ -24,10 +25,10 @@
   </NavbarBrand>
   <Nav navbar>
     <NavItem>
-      <NavLink href="/login">Login</NavLink>
+      <NavLink href={$url('/login')}>Login</NavLink>
     </NavItem>
     <NavItem>
-      <NavLink href="/register">Register</NavLink>
+      <NavLink href={$url('/register')}>Register</NavLink>
     </NavItem>
   </Nav>
 </Navbar>
