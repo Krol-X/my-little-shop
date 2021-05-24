@@ -3,17 +3,27 @@
 //
 
 const { Schema, model } = require('mongoose');
+const { defFromFields } = require('../../helpers');
 
-const schema = new Schema({
-  name: { type: String, required: true, min: 1, max: 64 },
-  role: { type: String, required: true, min: 1, max: 64 },
-  email: { type: String, required: true, min: 6, max: 64 },
-  passhash: { type: String },
-  regdate: { type: String, default: Date.now }
-});
+const fields = {
+  name: '',
+  role: '',
+  email: '',
+  passhash: '',
+  regdate: Date.now
+};
+
+const schema = new Schema(defFromFields(fields, {
+  name: { required: true },
+  email: { required: true },
+  regdate: { type: String }
+}));
 
 module.exports = {
-  init: require('./controller').init,
+  fields: fields,
   model: model('User', schema),
-  routes: require('./routes')
+  controller: require('./controller'),
+  routes: require('./routes'),
+  service: require('./service'),
+  validator: require('./validator')
 };

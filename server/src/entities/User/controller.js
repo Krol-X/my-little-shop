@@ -2,26 +2,43 @@
 // Entity User: controller
 //
 
+const { service } = require('./index');
+
 module.exports.init = (config, server, database) => {
-  console.log('> User init');
+  // pass
 };
 
-module.exports.Add = (req, res) => {
-  res.json('User create');
+module.exports.Add = (req, res, next) => {
+  service.UserAdd(req.body).then(
+    ({ item, result }) =>
+      result.then(res.json(item)).catch(next)
+  );
 };
 
-module.exports.List = (req, res) => {
-  res.json('Users list');
+module.exports.List = (req, res, next) => {
+  service.UserList(req.body).then(
+    ({ items, result }) =>
+      result.then(res.json(items)).catch(next)
+  );
 };
 
-module.exports.Info = (req, res) => {
-  res.json(`User ${req.params.id} info`);
+module.exports.Info = (req, res, next) => {
+  service.UserInfo(req.body).then(
+    ({ item, result }) =>
+      result.then(res.json(item)).catch(next)
+  );
 };
 
-module.exports.Change = (req, res) => {
-  res.json(`User ${req.params.id} change`);
+module.exports.Change = (req, res, next) => {
+  service.UserChange(req.body).then(
+    ({ item, result }) =>
+      result.then(res.json(item)).catch(next)
+  );
 };
 
-module.exports.Delete = (req, res) => {
-  res.json(`User ${req.params.id} delete`);
+module.exports.Delete = (req, res, next) => {
+  service.UserDelete(req.body).then(
+    ({ item, result }) =>
+      result.then(res.json(item)).catch(next)
+  );
 };

@@ -18,7 +18,7 @@ module.exports.init = (config, server, database) => {
       const name = dir.name;
       console.log('. ' + name);
       const entity = require('./' + name);
-      entity.init(config, server, database);
+      entity.controller.init(config, server, database);
       router.use('/' + name, entity.routes);
     });
   console.log('OK');
