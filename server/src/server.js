@@ -1,4 +1,8 @@
-module.exports.init = (config) => {
+//
+// Server
+//
+
+module.exports.init = (config, database) => {
   try {
     const express = require('express');
     const cors = require('cors');
@@ -8,12 +12,14 @@ module.exports.init = (config) => {
 
     app.use(express.json());
     app.use(cors());
-    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
 
-    app.use(config.server.routePrefix, require('./routes.js'));
+    const entities = require('./entities');
+    entities.init(config, app, database);
 
-    module.exports.app = app;
+    app.use(config.server.routePrefix, entities.router);
+
     return app;
   } catch (err) {
     console.log('Cannot initialize server: ', err);
