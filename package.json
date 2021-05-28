@@ -2,10 +2,10 @@
   "name": "my-little-shop",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "keywords": [],
-  "author": "",
+  "author": "Alex Krol <krolmail@list.ru>",
   "license": "ISC",
+  "main": "index.js",
   "devDependencies": {
     "concurrently": "6.1.0"
   },

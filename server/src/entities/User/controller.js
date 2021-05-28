@@ -2,43 +2,36 @@
 // Entity User: controller
 //
 
-const { service } = require('./index');
+//const { service } = require('./index');
+const service = require('./service');
+const { ApiError } = require('../../error');
 
 module.exports.init = (config, server, database) => {
   // pass
 };
 
-module.exports.Add = (req, res, next) => {
-  service.UserAdd(req.body).then(
-    ({ item, result }) =>
-      result.then(res.json(item)).catch(next)
+const controller = (f, req, res, next) => {
+  f(req.body).then(
+    result => res.json(result)
+  ).catch(
+    error => {
+      console.log(`${f.name} error: ${error}`);
+      next(ApiError.badRequest(error));
+    }
   );
 };
 
-module.exports.List = (req, res, next) => {
-  service.UserList(req.body).then(
-    ({ items, result }) =>
-      result.then(res.json(items)).catch(next)
-  );
-};
+module.exports.Add = (req, res, next) =>
+  controller(service.UserAdd, req, res, next);
 
-module.exports.Info = (req, res, next) => {
-  service.UserInfo(req.body).then(
-    ({ item, result }) =>
-      result.then(res.json(item)).catch(next)
-  );
-};
+module.exports.List = (req, res, next) =>
+  controller(service.UserList, req, res, next);
 
-module.exports.Change = (req, res, next) => {
-  service.UserChange(req.body).then(
-    ({ item, result }) =>
-      result.then(res.json(item)).catch(next)
-  );
-};
+module.exports.Info = (req, res, next) =>
+  controller(service.UserInfo, req, res, next);
 
-module.exports.Delete = (req, res, next) => {
-  service.UserDelete(req.body).then(
-    ({ item, result }) =>
-      result.then(res.json(item)).catch(next)
-  );
-};
+module.exports.Change = (req, res, next) =>
+  controller(service.UserChange, req, res, next);
+
+module.exports.Delete = (req, res, next) =>
+  controller(service.UserRemove, req, res, next);

@@ -1,6 +1,8 @@
 {
   "name": "my-little-shop_client",
   "version": "1.0.0",
+  "author": "Alex Krol <krolmail@list.ru>",
+  "license": "ISC",
   "dependencies": {
     "axios": "0.21.1",
     "sirv-cli": "1.0.11",
