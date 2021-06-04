@@ -6,19 +6,21 @@ module.exports.init = (config, database) => {
   try {
     const express = require('express');
     const cors = require('cors');
-    const bodyParser = require('body-parser');
+    const { ApolloServer } = require('apollo-server-express');
 
+    const { typeDefs, resolvers } = require('./entities').init();
+
+    const server = new ApolloServer({
+      typeDefs, resolvers,
+      playground: config.playground
+    });
     const app = express();
-
-    app.use(express.json());
+    server.applyMiddleware({ app });
     app.use(cors());
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(bodyParser.json());
 
-    const entities = require('./entities');
-    entities.init(config, app, database);
-
-    app.use(config.server.routePrefix, entities.router);
+    app.get('/', (req, res) => {
+      res.send(`<h1>My little-shop server</h1><br><a href="/graphql">GraphiQL link</a>`);
+    });
 
     return app;
   } catch (err) {

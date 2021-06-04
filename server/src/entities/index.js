@@ -4,24 +4,31 @@
 
 const router = require('express').Router();
 const fs = require('fs');
+const { gql } = require('apollo-server');
+const { buildScheme } = require('../tools');
 
 router.get('/', (req, res) => {
   res.json(require('../config').server.hello);
 });
 
-module.exports.init = (config, server, database) => {
+module.exports.init = () => {
   console.log('Loading entities...');
+
+  let schemes = [], resolvers = {};
 
   fs.readdirSync('./src/entities', { withFileTypes: true })
     .filter(d => d.isDirectory())
     .map(dir => {
       const name = dir.name;
       console.log('. ' + name);
-      const entity = require('./' + name);
-      entity.controller.init(config, server, database);
-      router.use('/' + name, entity.routes);
+      const { scheme, controller } = require('./' + name);
+      schemes.push(scheme);
+      resolvers = Object.assign(resolvers, controller);
     });
   console.log('OK');
+
+  const scheme = buildScheme(schemes);
+  return { typeDefs: gql(scheme), resolvers: resolvers };
 };
 
 module.exports.router = router;

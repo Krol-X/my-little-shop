@@ -1,5 +1,0 @@
-//
-// Entity User: validator
-//
-
-// todo
