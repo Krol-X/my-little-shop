@@ -4,7 +4,7 @@
 
 module.exports = {
   database: {
-    url: process.env.DB_URL || 'mongodb://localhost/ktodoapp'
+    url: process.env.DB_URL || 'mongodb://localhost/my-little-shop'
   },
   server: {
     hello: process.env.HELLO || 'my-little-shop server',

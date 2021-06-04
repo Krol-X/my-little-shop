@@ -5,10 +5,18 @@
 const _ = require('lodash');
 
 const filterFields = (source, template, saveUndefined) =>
-  template.map((value, key) => source[key] || (value && !saveUndefined));
+  Object.entries(template).reduce((result, [key, value]) => {
+    result[key] = source[key] || (value && !saveUndefined);
+    return result;
+  }, {});
 
-const changeFields = (oldFields, newFields) =>
-  oldFields.map((value, key) => newFields[key] || value);
+const changeFields = (oldFields, newFields) => {
+  console.log(newFields);
+  return Object.entries(oldFields).reduce((result, [key, value]) => {
+    result[key] = newFields[key]? newFields[key]: value;
+    return result;
+  }, {});
+}
 
 const defFromFields = (fields, params) => {
   return _.reduce(fields, (memo, value, key) => {
@@ -23,8 +31,8 @@ const defFromFields = (fields, params) => {
   });
 };
 
-const isEmptyArray = arr => {
-  if (!Array.isArray(arr)) return false;
+const isEmptyArray = obj => {
+  if (!Array.isArray(obj)) return false;
   for (let i in obj) {
     if (obj.hasOwnProperty(i)) return false;
   }
@@ -43,6 +51,8 @@ const isEmptyObject = obj => {
 
 const isEmptyArrObj = it => isEmptyObject(it) || isEmptyArray(it);
 
+const withoutId = (it) => { if (it["_id"]) delete it["_id"] };
+
 
 module.exports = {
   isEmptyArray: isEmptyArray,
@@ -51,5 +61,6 @@ module.exports = {
   isEmptyArrObj: isEmptyArrObj,
   filterFields: filterFields,
   changeFields: changeFields,
-  defFromFields: defFromFields
+  defFromFields: defFromFields,
+  withoutId: withoutId
 };

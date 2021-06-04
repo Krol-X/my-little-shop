@@ -16,14 +16,12 @@ const fields = {
 const schema = new Schema(defFromFields(fields, {
   name: { required: true },
   email: { required: true },
-  regdate: { type: String }
+  regdate: { type: String, default: Date.now }
 }));
 
-module.exports = {
-  fields: fields,
-  model: model('User', schema),
-  controller: require('./controller'),
-  routes: require('./routes'),
-  service: require('./service'),
-  validator: require('./validator')
-};
+module.exports.fields = fields;
+module.exports.model = model('User', schema);
+module.exports.service = require('./service');
+module.exports.controller = require('./controller');
+module.exports.validator = require('./validator');
+module.exports.routes = require('./routes');
