@@ -1,5 +1,5 @@
 //
-// Server
+// Server initialization
 //
 
 module.exports.init = (config, database) => {

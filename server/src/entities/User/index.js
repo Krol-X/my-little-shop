@@ -4,13 +4,14 @@
 
 const { Schema, model } = require('mongoose');
 
-const schema = new Schema({
+const mongoSchema = new Schema({
   name: String,
   role: String,
   password: String,
   regdate: { type: String, default: Date.now }
 });
 
-module.exports.model = model('User', schema);
+module.exports.model = model('User', mongoSchema);
+
 module.exports.scheme = require('./scheme');
 module.exports.controller = require('./controller');

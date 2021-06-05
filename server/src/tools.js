@@ -1,14 +1,18 @@
+//
+// Tools
+//
+
 module.exports.buildScheme = (schemes) => {
   let result = '', queries = '', mutations = '';
 
   schemes.forEach(x => {
-    result = result.concat(x.root.trim());
-    queries = queries.concat(x.query.trim());
-    mutations = mutations.concat(x.mutation.trim());
+    result = result.concat(x.root, '\n');
+    queries = queries.concat(x.query, '\n');
+    mutations = mutations.concat(x.mutation, '\n');
   });
 
-  return result.concat('\n',
-    queries !== ''? `type Query { ${queries} }`: '',
-    mutations !== ''? `type Mutation { ${mutations} }`: ''
+  return result.concat(
+    queries !== ''? `\ntype Query { ${queries}}`: '',
+    mutations !== ''? `\ntype Mutation { ${mutations}}`: ''
   );
 };

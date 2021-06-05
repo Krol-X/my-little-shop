@@ -4,20 +4,30 @@
 
 module.exports = {
   root: `
-    type User {
+    type UserType {
       id: ID
       name: String
-      role: String
       password: String
-      GetMany(filter: String): User
+      regdate: String
     }
     
-    # input...
+    input AddUserIn {
+      name: String!
+      password: String!
+    }
+    
+    input SetUserIn {
+      name: String
+      password: String
+    }
+    
   `,
   query: `
-    getAllUsers: [User]
+    getUsers(filter: String): [UserType]
   `,
   mutation: `
-  
+    addUser(user: AddUserIn!): UserType
+    setUserById(id: ID!, fields: SetUserIn!): UserType
+    delUserById(id: ID!): UserType
   `
 };

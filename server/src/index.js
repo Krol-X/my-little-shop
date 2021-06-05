@@ -3,11 +3,10 @@
 //
 
 const config = require('./config');
-//const database = require('./database');
+const database = require('./database');
 const server = require('./server');
 
-//database.init(config);
-const database = null;
+database.init(config);
 const app = server.init(config, database);
 
 server.start(app, config);

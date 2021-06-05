@@ -28,6 +28,7 @@ module.exports.init = () => {
   console.log('OK');
 
   const scheme = buildScheme(schemes);
+  console.log(`\nScheme is:\n${scheme}\n\n`);
   return { typeDefs: gql(scheme), resolvers: resolvers };
 };
 

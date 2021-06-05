@@ -1,5 +1,5 @@
 //
-// Database
+// Database initialization
 //
 
 const mongoose = require('mongoose');
