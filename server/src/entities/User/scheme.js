@@ -7,8 +7,8 @@ module.exports = {
     type UserType {
       id: ID
       name: String
-      password: String
       regdate: String
+      # password: String = hash
     }
     
     input AddUserIn {

@@ -3,6 +3,7 @@
 //
 
 const { model } = require('./index');
+const { hashPass } = require('../../tools');
 
 module.exports = {
 
@@ -17,11 +18,11 @@ module.exports = {
 
     'addUser': async (_, { user }) => {
       const item = new model(user);
-      return await model.collection.insertOne(item).then(it => it.ops[0]);
+      return await model.collection.insertOne(await hashPass(item)).then(it => it.ops[0]);
     },
 
     'setUserById': async (_, { id, fields }) =>
-      await model.findByIdAndUpdate(id, fields, { new: true }).then(it => it),
+      await model.findByIdAndUpdate(id, await hashPass(fields), { new: true }).then(it => it),
 
     'delUserById': async (_, { id }) =>
       await model.findByIdAndRemove(id).then(it => it)

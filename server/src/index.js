@@ -7,7 +7,7 @@ const database = require('./database');
 const server = require('./server');
 
 database.init(config);
-const app = server.init(config, database);
+const app = server.init(config);
 
-server.start(app, config);
+await server.start(app, config);
 app.listen();

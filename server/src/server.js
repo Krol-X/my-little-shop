@@ -2,7 +2,7 @@
 // Server initialization
 //
 
-module.exports.init = (config, database) => {
+module.exports.init = (config) => {
   try {
     const express = require('express');
     const cors = require('cors');

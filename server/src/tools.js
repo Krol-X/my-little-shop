@@ -2,6 +2,10 @@
 // Tools
 //
 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+
 module.exports.buildScheme = (schemes) => {
   let result = '', queries = '', mutations = '';
 
@@ -15,4 +19,23 @@ module.exports.buildScheme = (schemes) => {
     queries !== ''? `\ntype Query { ${queries}}`: '',
     mutations !== ''? `\ntype Mutation { ${mutations}}`: ''
   );
+};
+
+module.exports.hashPass = async (root) => {
+  if (!!root.password) {
+    root.password = await bcrypt.hash(root.password, 7);
+  }
+  return root;
+};
+
+module.exports.genToken = (payload) => {
+  return jwt.sign(payload, config.server.secret_key, { expiresIn: '24h' });
+};
+
+module.exports.decodeToken = (token) => {
+  try {
+    return jwt.verify(token, config.server.secret_key);
+  } catch (err) {
+    return null;
+  }
 };
