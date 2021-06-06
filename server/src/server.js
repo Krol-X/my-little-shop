@@ -8,11 +8,11 @@ module.exports.init = (config) => {
     const cors = require('cors');
     const { ApolloServer } = require('apollo-server-express');
 
-    const { typeDefs, resolvers } = require('./entities').init();
+    const { typeDefs, resolvers } = require('./entities').init(config);
 
     const server = new ApolloServer({
       typeDefs, resolvers,
-      playground: config.playground
+      playground: config.debug.playground
     });
     const app = express();
     server.applyMiddleware({ app });

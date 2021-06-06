@@ -7,27 +7,47 @@ module.exports = {
     type UserType {
       id: ID
       name: String
+      role: String
       regdate: String
-      # password: String = hash
+      # password: String # hash
     }
     
-    input AddUserIn {
+    input UserIn {
+      name: String
+      password: String
+      role: String
+    }
+    
+    input UserInReq {
+      name: String!
+      password: String!
+      role: String!
+    }
+    
+    input LoginIn {
       name: String!
       password: String!
     }
     
-    input SetUserIn {
+    type LoginOut {
+      id: ID
       name: String
-      password: String
+      regdate: String
+      token: String
     }
     
   `,
   query: `
-    getUsers(filter: String): [UserType]
+    getUsers(t: String!, filter: String): [UserType]
+    # Public methods
+    loginUser(info: LoginIn!): LoginOut
+    authUser(token: String!): LoginOut
   `,
   mutation: `
-    addUser(user: AddUserIn!): UserType
-    setUserById(id: ID!, fields: SetUserIn!): UserType
-    delUserById(id: ID!): UserType
+    addUser(t: String!, info: UserInReq!): UserType
+    setUserById(t: String!, id: ID!, info: UserIn!): UserType
+    delUserById(t: String!, id: ID!): UserType
+    # Public methods
+    registerUser(info: LoginIn!): LoginOut
   `
 };

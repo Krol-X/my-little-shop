@@ -5,9 +5,9 @@
 const { Schema, model } = require('mongoose');
 
 const mongoSchema = new Schema({
-  name: String,
-  role: String,
+  name: { type: String, unique: true },
   password: String,
+  role: String,
   regdate: { type: String, default: Date.now }
 });
 

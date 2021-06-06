@@ -9,9 +9,13 @@ module.exports = {
   server: {
     hello: process.env.HELLO || 'my-little-shop server',
     port: process.env.PORT || 4000,
-    secret_key: process.env.SECRET_KEY || 'admin',
-    routePrefix: process.env.ROUTE_PREFIX || '/',
-    playground: process.env.PLAYGROUND || true,
-    tracing: process.env.TRACING || true
+    default_admin: process.env.DEFAULT_ADMIN || 'admin',
+    default_admin_pass: process.env.DEFAULT_ADMIN_PASS || 'admin',
+    secret_key: process.env.SECRET_KEY || 'my-secret-key',
+    routePrefix: process.env.ROUTE_PREFIX || '/'
+  },
+  debug: {
+    print_scheme: process.env.DEBUG_SCHEME || false,
+    playground: process.env.DEBUG_PLAYGROUND || true
   }
 };

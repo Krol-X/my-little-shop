@@ -8,7 +8,8 @@ module.exports.init = (config) => {
   const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useCreateIndex: true
   };
   try {
     const url = config.database.url;

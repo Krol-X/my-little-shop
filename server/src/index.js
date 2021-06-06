@@ -9,5 +9,5 @@ const server = require('./server');
 database.init(config);
 const app = server.init(config);
 
-await server.start(app, config);
+server.start(app, config);
 app.listen();

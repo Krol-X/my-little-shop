@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   res.json(require('../config').server.hello);
 });
 
-module.exports.init = () => {
+module.exports.init = (config) => {
   console.log('Loading entities...');
 
   let schemes = [], resolvers = {};
@@ -28,7 +28,9 @@ module.exports.init = () => {
   console.log('OK');
 
   const scheme = buildScheme(schemes);
-  console.log(`\nScheme is:\n${scheme}\n\n`);
+  if (config.debug.print_scheme) {
+    console.log(`\nScheme is:\n${scheme}\n`);
+  }
   return { typeDefs: gql(scheme), resolvers: resolvers };
 };
 
