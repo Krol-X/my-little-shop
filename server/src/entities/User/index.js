@@ -9,7 +9,7 @@ const mongoSchema = new Schema({
   password: String,
   role: String,
   regdate: { type: String, default: Date.now }
-});
+}, { _id: false }); // todo: disable _id?
 
 module.exports.model = model('User', mongoSchema);
 

@@ -5,119 +5,148 @@
 const config = require('../../config');
 const { model } = require('./index');
 const {
-  hashPassField, hashCheck,
-  genToken, decodeToken,
-  fixFields
+  hashPassField, checkPass, newToken, fromToken
 } = require('../../tools');
 
-const logic = {
-  addUser: async (info) => {
-    const item = new model(info);
-    return await model.collection.insertOne(hashPassField(item))
-      .then(it => it.ops[0]);
-  },
-  findUser: (filter) => {
-    return model.find(filter || {});
-  },
-  findOneUser: (filter) => {
-    return model.findOne(filter || {});
-  },
-  findOneUserById: (id) => {
-    return model.findById(id);
-  },
-  setUserById: async (id, info) => {
-    return await model.findByIdAndUpdate(id,
-      hashPassField(info), { new: true })
-      .then(it => it);
-  },
-  delUserById: async (id) => {
-    return await model.findByIdAndRemove(id).then(it => it);
-  },
-  login: async (info) => {
-    const user = await logic.findOneUser(fixFields(info));
-    if (user && hashCheck(info.password, user.password)) {
-      user.token = genToken(fixFields(user));
-      return user;
+const logic = {};
+
+//  addUser [v]
+logic.addUser = async (isAdmin, info) => {
+  let result = null;
+  try {
+    if (isAdmin) {
+      let user = await model.collection.insertOne(
+        new model(hashPassField(info))
+      );
+      if (!!user) result = user.ops[0];
     }
+  } catch (err) {
+    console.log(`addUser: ${err}`);
+  }
+  return result;
+};
+
+//  findUser [v]
+logic.findUser = async (isAdmin, filter) =>
+  !!isAdmin? await model.find(filter || {}): null;
+
+//  findOneUser [v]
+logic.findOneUser = async (isAdmin, filter) =>
+  !!isAdmin? await model.findOne(filter || {}): null;
+
+//  setUser [v]
+logic.setUser = async (isAdmin, name, info) =>
+  !!isAdmin? await model.findOneAndUpdate(
+    { 'name': name }, info, { new: true }
+  ): null;
+
+//  delUser [v]
+logic.delUser = async (isAdmin, name) =>
+  !!isAdmin && isAdmin.name !== name?
+    await model.findOneAndRemove({ 'name': name }): null;
+
+//  registerUser [v]
+//  1. Try to register
+//  2. Login
+logic.registerUser = async (_, info) => {
+  info.role = 'User';
+  let new_user = await logic.addUser(true, info);
+  return !!new_user? await logic.loginUser(false, info): null;
+};
+
+//  loginUser [v]
+//  1. Find user
+//  2. Check it password
+//  3. Generate token
+//  4. Return name+token
+logic.loginUser = async (_, { name, password }) => {
+  let user = await logic.findOneUser(true, { name: name });
+  if (!!user && checkPass(password, user.password)) {
+    let token = newToken({ name: name });
+    return { 'name': name, 'token': token };
+  } else {
     return null;
+  }
+};
+
+//  authUser [v]
+//  1. Decode token
+//  2. Return found info about user
+logic.authUser = async (_, token) => {
+  let data = fromToken(token);
+  if (!!data) {
+    return await logic.findOneUser(true, { name: data.name });
+  } else {
+    return null;
+  }
+};
+
+const logic_call = async (token, fun, ...args) => {
+  let isAdmin = false;
+  if (token !== undefined) {
+    let data = fromToken(token);
+    if (!!data) {
+      let user = await logic.findOneUser(true, { name: data.name });
+      if (!!user && user.role === 'Admin') isAdmin = Object.assign({}, user._doc);
+    }
+  }
+  if (config.debug.print_logic) {
+    console.log(`Call: ${fun}`);
+    console.log(`isAdmin: ${isAdmin}`);
+    console.log(`args: `, args);
+  }
+  let result = await logic[fun](isAdmin, ...args);
+  if (config.debug.print_logic) {
+    console.log(`Result: ${result}`);
+    console.log();
+  }
+  return result;
+};
+
+
+module.exports = {
+
+  Query: {
+    'getUsers': async (_, { t, filter }) =>
+      logic_call(t, 'findUser', filter),
+
+    // Public Methods
+    'loginUser': async (_, { info }) =>
+      logic_call(undefined, 'loginUser', info),
+    'authUser': async (_, { token }) =>
+      logic_call(undefined, 'authUser', token)
   },
-  auth: async (token) => {
-    const data = decodeToken(token);
-    if (data) data.token = token;
-    return data;
+
+  Mutation: {
+    'addUser': async (_, { t, info }) =>
+      logic_call(t, 'addUser', info),
+    'setUser': async (_, { t, name, info }) =>
+      logic_call(t, 'setUser', name, info),
+    'delUser': async (_, { t, name }) =>
+      logic_call(t, 'delUser', name),
+
+    // Public Methods
+    'registerUser': async (_, { info }) =>
+      logic_call(undefined, 'registerUser', info)
   }
+
 };
 
-logic.findOneUserById('60bd2681473fb11550151343')
-  .then(x => console.log(x));
 
-const checkAdmin = async (token) => {
-  const data = decodeToken(token);
-  if (data) {
-    // todo: Strange bug
-    //console.log(data._id)
-    await logic.findOneUserById(data._id).then(
-      user =>
-        !!user && data.role === 'Admin'? data: false
-    );
-  }
-  return false;
-};
-
+//
 // Generate admin if no users
-logic.findUser().then(async users => {
+//
+logic.findUser(true).then(async users => {
   if (users.length === 0) {
     const cfg = config.server;
     console.log(`
 Generating admin: ${cfg.default_admin}
 Password: ${cfg.default_admin_pass}
 `);
-    await logic.addUser({
+    await logic.addUser(true, {
       name: cfg.default_admin,
       password: cfg.default_admin_pass,
       role: 'Admin'
     });
   }
 });
-
-
-module.exports = {
-
-  Query: {
-    'getUsers': async (parent, { t, filter }) => {
-      if (!!await checkAdmin(t)) return logic.findUser(filter);
-    },
-
-    // Public Methods
-    'loginUser': async (_, { info }) => {
-      return await logic.login(info);
-    },
-    'authUser': async (_, { token }) => {
-      return await logic.auth(token);
-    }
-  },
-
-  Mutation: {
-    'addUser': async (_, { t, info }) => {
-      if (!!await checkAdmin(t)) return await logic.addUser(info);
-    },
-    'setUserById': async (_, { t, id, info }) => {
-      if (!!await checkAdmin(t)) return await logic.setUserById(id, info);
-    },
-    'delUserById': async (_, { t, id }) => {
-      let admin = await checkAdmin(t);
-      console.log('delUserById', admin, id);
-      //if (admin && admin.id !== id) return await logic.delUserById(id);
-    },
-
-    // Public Methods
-    'registerUser': async (_, { info }) => {
-      info.role = 'User';
-      if (await logic.addUser(info)) {
-        return await logic.login(info);
-      }
-      return null;
-    }
-  }
-
-};

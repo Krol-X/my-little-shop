@@ -16,6 +16,7 @@ module.exports = {
   },
   debug: {
     print_scheme: process.env.DEBUG_SCHEME || false,
-    playground: process.env.DEBUG_PLAYGROUND || true
+    playground: process.env.DEBUG_PLAYGROUND || true,
+    print_logic: process.env.DEBUG_PRINT_LOGIC || false
   }
 };

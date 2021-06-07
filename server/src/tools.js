@@ -21,36 +21,26 @@ module.exports.buildScheme = (schemes) => {
   );
 };
 
-module.exports.hashPass = (pass) => {
-  return bcrypt.hashSync(pass, 7);
-};
 
 module.exports.hashPassField = (root) => {
-  if (!!root && !!root.password) {
-    root.password = bcrypt.hashSync(root.password, 7);
+  let result = Object.assign({}, root);
+  if (!!result && !!result.password) {
+    result.password = bcrypt.hashSync(result.password, 7);
   }
-  return root;
-};
-
-module.exports.hashCheck = (pass, hash) => {
-  return bcrypt.compareSync(pass, hash);
-};
-
-module.exports.fixFields = (info) => {
-  let result = !!info._doc? info._doc: info;
-  result = Object.assign({}, result);
-  if (!!info._id) result.id = info._id;
-  delete result.password;
   return result;
+};
+
+module.exports.checkPass = (pass, hash) => {
+  return bcrypt.compareSync(pass, hash);
 };
 
 const secret = config.server.secret_key;
 
-module.exports.genToken = (payload) => {
+module.exports.newToken = (payload) => {
   return jwt.sign(payload, secret, { expiresIn: '24h' });
 };
 
-module.exports.decodeToken = (token) => {
+module.exports.fromToken = (token) => {
   try {
     return jwt.verify(token, secret);
   } catch (err) {
